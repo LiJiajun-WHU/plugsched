@@ -1,14 +1,21 @@
 diff --git a/scheduler/kernel/sched/mod/fair.c b/scheduler/kernel/sched/mod/fair.c
 --- a/scheduler/kernel/sched/mod/fair.c
 +++ b/scheduler/kernel/sched/mod/fair.c
-@@ -700,6 +700,31 @@ static struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
+@@ -700,6 +700,39 @@ static struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
  return __node_2_se(left);
  }
  
 +/*
-+ * Pick next entity for EEVDF: select the task with earliest eligible deadline
++ * I/O bound task detection threshold
++ * Tasks with average CPU utilization below this value are considered I/O bound
 + */
-+static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
++#define EEVDF_IO_BOUND_THRESHOLD 200
++
++/*
++ * Pick next entity for EEVDF: select the task with earliest eligible deadline
++ * This experimental version favors I/O bound tasks by reducing their effective deadline
++ */
++static struct sched_entity *pick_eevdf_exp(struct cfs_rq *cfs_rq)
 +{
 +struct rb_node *node = cfs_rq->tasks_timeline.rb_leftmost;
 +struct sched_entity *se = NULL, *best = NULL;
@@ -19,9 +26,11 @@ diff --git a/scheduler/kernel/sched/mod/fair.c b/scheduler/kernel/sched/mod/fair
 +u64 deadline = se->deadline;
 +
 +if (sched_feat(EEVDF_LATENCY_EXP)) {
-+// Favor I/O bound tasks by reducing their effective deadline
-+if (se->avg.util_avg < 200) {
-+deadline -= (deadline - se->vruntime) / 4;
++// Favor I/O bound tasks with earlier effective deadlines
++if (se->avg.util_avg < EEVDF_IO_BOUND_THRESHOLD && 
++    deadline > se->vruntime) {
++u64 delta = deadline - se->vruntime;
++deadline -= delta >> 2;  // Reduce by 25%
 +}
 +}
 +

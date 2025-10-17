@@ -15,11 +15,11 @@ diff --git a/scheduler/kernel/sched/mod/fair.c b/scheduler/kernel/sched/mod/fair
 +struct task_struct *p = task_of(curr);
 +int nice = task_nice(p);
 +if (nice < 0) {
-+// High priority tasks: reduce vruntime growth
-+delta_vruntime = delta_vruntime * 9 / 10;
++// High priority tasks: reduce vruntime growth by ~11%
++delta_vruntime -= delta_vruntime >> 3;
 +} else if (nice > 0) {
-+// Low priority tasks: increase vruntime growth
-+delta_vruntime = delta_vruntime * 11 / 10;
++// Low priority tasks: increase vruntime growth by ~12%
++delta_vruntime += delta_vruntime >> 3;
 +}
 +}
 +
