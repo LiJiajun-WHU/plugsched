@@ -55,8 +55,6 @@ After the development, the scheduler with loading/unloading and other related co
 ## Quick Start
 Plugsched currently supports Anolis OS 8.6 ANCK by default, and other OS need to adjust the [boundary configurations](./docs/Support-various-Linux-distros.md). In order to reduce the complexity of building a running environment, we provide container images and Dockerfiles, and developers do not need to build a development environment by themselves. For convenience, we purchased an Alibaba Cloud ECS (64CPU + 128GB) and installed the Anolis OS 8.6 ANCK. We will live update the kernel scheduler.
 
-**Note**: If you are using ARM64 Debian systems, please refer to the [Complete Debian ARM64 Deployment Guide](./docs/Debian-ARM64-Guide.md), which provides a comprehensive walkthrough from download to deployment.
-
 1. Log into the cloud server, and install some necessary basic software packages.
 ```shell
 # yum install anolis-repos -y

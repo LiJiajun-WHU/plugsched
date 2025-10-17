@@ -55,8 +55,6 @@ plugsched 是 Linux 内核调度器子系统热升级的 SDK，它可以实现�
 ## Quick Start
 目前，plugsched 默认支持 Anolis OS 8.6 ANCK 系统发行版，其它系统需要[调整边界配置](./docs/Support-various-Linux-distros.md)。为了减轻搭建运行环境的复杂度，我们提供了的容器镜像和 Dockerfile，开发人员不需要自己去搭建开发环境。为了方便演示，这里购买了一台阿里云 ECS（64CPU + 128GB），并安装 Anolis OS 8.6 ANCK 系统发行版，我们将会对内核调度器进行热升级。
 
-**注意**: 如果您使用的是 ARM64 架构的 Debian 系统，请参考 [Debian ARM64 完整部署指南](./docs/Debian-ARM64-Guide_zh.md)，该指南提供了从下载到部署的完整流程。
-
 1. 登陆云服务器后，先安装一些必要的基础软件包：
 ```shell
 # yum install anolis-repos -y
