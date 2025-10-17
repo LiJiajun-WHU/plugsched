@@ -1,0 +1,44 @@
+diff --git a/scheduler/kernel/sched/mod/fair.c b/scheduler/kernel/sched/mod/fair.c
+--- a/scheduler/kernel/sched/mod/fair.c
++++ b/scheduler/kernel/sched/mod/fair.c
+@@ -600,6 +600,25 @@ static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ return slice;
+ }
+ 
++/*
++ * Calculate virtual deadline for EEVDF scheduler
++ * deadline = vruntime + slice
++ */
++static void update_deadline(struct cfs_rq *cfs_rq, struct sched_entity *se)
++{
++u64 slice = sched_slice(cfs_rq, se);
++
++if (sched_feat(EEVDF_DEADLINE_EXP)) {
++// Experimental: adjust deadline based on task nice value
++struct task_struct *p = task_of(se);
++int nice = task_nice(p);
++if (nice < 0) {
++slice = slice * 8 / 10;  // Shorter deadline for high priority
++}
++}
++
++se->deadline = se->vruntime + slice;
++}
++
+ /*
+  * We calculate the wall-clock slice from the period by taking a part
+  * proportional to the weight.
+diff --git a/scheduler/kernel/sched/mod/features.h b/scheduler/kernel/sched/mod/features.h
+--- a/scheduler/kernel/sched/mod/features.h
++++ b/scheduler/kernel/sched/mod/features.h
+@@ -1,4 +1,10 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * EEVDF virtual deadline calculation experiment
++ * Experimental modification to EEVDF deadline calculation
++ */
++SCHED_FEAT(EEVDF_DEADLINE_EXP, false)
+ 
+ /*
+  * Only give sleepers 50% of their service deficit. This allows
