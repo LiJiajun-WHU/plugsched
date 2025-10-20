@@ -57,8 +57,6 @@ Plugsched currently supports Anolis OS 8.6 ANCK by default, and other OS need to
 
 **Note**: If you are using ARM64 Debian systems, please refer to the [Complete Debian ARM64 Deployment Guide](./docs/Debian-ARM64-Guide.md), which provides a comprehensive walkthrough from download to deployment.
 
-**Scheduler Algorithm Experiments**: For detailed guides on modifying CFS, EEVDF, and other scheduling algorithms with experimental comparisons, see the [Scheduler Algorithm Experiments Guide](./docs/Scheduler-Algorithm-Experiments.md).
-
 1. Log into the cloud server, and install some necessary basic software packages.
 ```shell
 # yum install anolis-repos -y
