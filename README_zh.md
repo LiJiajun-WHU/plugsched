@@ -57,6 +57,8 @@ plugsched 是 Linux 内核调度器子系统热升级的 SDK，它可以实现�
 
 **注意**: 如果您使用的是 ARM64 架构的 Debian 系统，请参考 [Debian ARM64 完整部署指南](./docs/Debian-ARM64-Guide_zh.md)，该指南提供了从下载到部署的完整流程。
 
+**调度器算法实验**: 关于修改 CFS、EEVDF 等调度算法并进行实验对比的详细指南，请参阅 [调度器算法实验指南](./docs/Scheduler-Algorithm-Experiments_zh.md)。
+
 1. 登陆云服务器后，先安装一些必要的基础软件包：
 ```shell
 # yum install anolis-repos -y

@@ -1,0 +1,43 @@
+diff --git a/scheduler/kernel/sched/mod/fair.c b/scheduler/kernel/sched/mod/fair.c
+--- a/scheduler/kernel/sched/mod/fair.c
++++ b/scheduler/kernel/sched/mod/fair.c
+@@ -800,7 +800,22 @@ static void update_curr(struct cfs_rq *cfs_rq)
+ 
+ curr->sum_exec_runtime += delta_exec;
+ schedstat_add(cfs_rq->exec_clock, delta_exec);
+-curr->vruntime += calc_delta_fair(delta_exec, curr);
++
++// Experimental vruntime calculation
++u64 delta_vruntime = calc_delta_fair(delta_exec, curr);
++
++if (sched_feat(CFS_VRUNTIME_EXP)) {
++// Adjust vruntime based on task priority
++struct task_struct *p = task_of(curr);
++int nice = task_nice(p);
++if (nice < 0) {
++// High priority tasks: reduce vruntime growth by ~11%
++delta_vruntime -= delta_vruntime >> 3;
++} else if (nice > 0) {
++// Low priority tasks: increase vruntime growth by ~12%
++delta_vruntime += delta_vruntime >> 3;
++}
++}
++
++curr->vruntime += delta_vruntime;
+ update_min_vruntime(cfs_rq);
+ }
+ 
+diff --git a/scheduler/kernel/sched/mod/features.h b/scheduler/kernel/sched/mod/features.h
+--- a/scheduler/kernel/sched/mod/features.h
++++ b/scheduler/kernel/sched/mod/features.h
+@@ -1,4 +1,10 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * CFS vruntime calculation experiment
++ * Experimental modification to CFS virtual runtime calculation
++ */
++SCHED_FEAT(CFS_VRUNTIME_EXP, false)
+ 
+ /*
+  * Only give sleepers 50% of their service deficit. This allows
