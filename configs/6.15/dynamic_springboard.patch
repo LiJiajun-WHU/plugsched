@@ -1,0 +1,15 @@
+diff --git a/scheduler/module.c b/scheduler/module.c
+index xxxxx..yyyyy 100644
+--- a/scheduler/module.c
++++ b/scheduler/module.c
+@@ -50,6 +50,10 @@ static int __init scheduler_init(void)
+ {
+ int ret;
+ 
++printk(KERN_INFO "Plugsched: Initializing for Linux 6.15 (EEVDF)\n");
++printk(KERN_INFO "Plugsched: Version %s\n", PLUGSCHED_VERSION);
++printk(KERN_INFO "Plugsched: EEVDF scheduler support enabled\n");
++
+ ret = init_scheduler_module();
+ if (ret) {
+ printk(KERN_ERR "Failed to initialize scheduler module\n");
